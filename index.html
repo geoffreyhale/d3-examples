@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>Force Layout Example 8</title>
+    <title>Force Layout Example 9</title>
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
           rel="stylesheet">
     <style>
@@ -50,7 +50,7 @@
     <i class='fa fa-step-forward'></i>
 </button>
 <button id='slow' title='Run Layout in Slow Motion'>
-    <i class='fa fa-play'        ></i>
+    <i class='fa fa-play'></i>
 </button>
 <button id='play' title='Run Layout at Full Speed'>
     <i class='fa fa-fast-forward'></i>
@@ -177,11 +177,11 @@
             .nodes(dataNodes2)
             .links(dataLinks2);
 
-        // The only difference between the two layouts is that we remove
-        // the gravity from the second layout. The first retains its
-        // default value.
+        // The only difference between the two layouts is the value
+        // for friction. The first layout retains the default value
+        // (0.9) while the second uses a much lower value.
 
-        force2.gravity(0);
+        force2.friction(0.1);
 
         // Define the `linkDistance` for the graph. This is the
         // distance we desire between connected nodes.
