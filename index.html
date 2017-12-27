@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>Force Layout Example 6</title>
+    <title>Force Layout Example 7</title>
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
           rel="stylesheet">
     <style>
@@ -13,17 +13,13 @@
             stroke-width: 2px;
         }
 
-        .node.red {
-            fill: #cc0000;
-        }
-
-        .node.blue {
-            fill: #0000cc;
-        }
-
         .link {
             stroke: #777;
             stroke-width: 2px;
+        }
+
+        .link.red {
+            stroke: #FF0000;
         }
 
         button {
@@ -119,10 +115,9 @@
         // them here so we can get a consistent application of the layout.
 
         var dataNodes = [
-            { x: 4*width/9, y:   height/3, className: 'red' },
-            { x: 5*width/9, y:   height/3, className: 'red' },
-            { x: 4*width/9, y: 2*height/3 },
-            { x: 5*width/9, y: 2*height/3 }
+            { x:   width/3, y:   height/3 },
+            { x: 2*width/3, y:   height/3 },
+            { x:   width/2, y: 2*height/3 }
         ];
 
         // The `links` array contains objects with a `source` and a `target`
@@ -132,8 +127,9 @@
         // two nodes isolated.
 
         var dataLinks = [
-            { source: 0, target: 2},
-            { source: 1, target: 3}
+            { source: 0, target: 1, className: 'red'},
+            { source: 1, target: 2},
+            { source: 2, target: 0}
         ];
 
         // Now we create a force layout object and define its properties.
@@ -145,31 +141,21 @@
             .nodes(dataNodes)
             .links(dataLinks);
 
-        // To keep the nodes centered in the visualization we increase
-        // the `gravity` a bit more than its default value of `0.1`. We'll
-        // explore this property in more detail in another example.
-
-        force.gravity(0.2);
-
         // Define the `linkDistance` for the graph. This is the
         // distance we desire between connected nodes.
 
-        force.linkDistance(height/4);
+        force.linkDistance(height/2);
 
         // Here's the part where things get interesting. Because
-        // we're looking at the `charge` property, that's what we
-        // want to vary between the read and blue nodes. Most often
+        // we're looking at the `linkStrength` property, that's what
+        // we want to vary between the read and blue nodes. Most often
         // this property is set to a constant value for an entire
         // visualization, but D3 also lets us define it as a function.
         // When we do that, we can set a different value for each node.
 
-        // Negative charge values indicate repulsion, which is generally
-        // desirable for force-directed graphs. (Positive values indicate
-        // attraction and can be helpful for other visualization types.)
-
-        force.charge(function(node) {
-            if (node.className === 'red')  return -3000;
-            return -30;
+        force.linkStrength(function(link) {
+            if (link.className === 'red')  return 0.1;
+            return 1;
         });
 
         // Next we'll add the nodes and links to the visualization.
@@ -217,17 +203,17 @@
             .attr('cx', function(d) { return d.x; })
             .attr('cy', function(d) { return d.y; });
 
-        // If we've defined a class name for a node, add it to the
+        // If we've defined a class name for a link, add it to the
         // element. We'll use the D3 `each` function to iterate
         // through the selection. The parameter passed to that
         // function is the data objected associated with the
         // selection which, by convention, is parameterized as `d`.
-        // In our case that will be the node object.
+        // In our case that will be the link object.
 
         // Also in the `each` function, the context (`this`) is
         // set to the associated node in the DOM.
 
-        nodes.each(function(d){
+        links.each(function(d){
             if (d.className) {
                 d3.select(this).classed(d.className, true)
             }
